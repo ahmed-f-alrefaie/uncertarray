@@ -35,6 +35,8 @@ print(z)  # Output: uncertarray with propagated uncertainties
 # Use NumPy ufuncs
 w = np.sqrt(x)
 print(w)  # Output: uncertarray with propagated uncertainties
+
+print(f"Data: {z.data}, Uncertainty: {z.uncertainty}")
 ```
 
 **This is still in early development. More features and improvements are coming soon!**
