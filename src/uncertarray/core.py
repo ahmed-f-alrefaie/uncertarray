@@ -69,6 +69,7 @@ unary_derivatives: dict[str, UnaryCallableType] = {
     "ceil": lambda x: 0,
     "floor": lambda x: 0,
     "trunc": lambda x: 0,
+    "negative": lambda x: -1,
     "sign": lambda x: 0,  # Keep in mind the approximation note above.
 }
 
@@ -349,6 +350,14 @@ class uncertarray(t.Generic[T]):
     #         return uncertarray(self.data << other, self.uncertainty << other)
 
     #     return self.__array_ufunc__(np.left_shift, "__call__", self, other)
+
+    def __neg__(self) -> "uncertarray":
+        """Negate uncertarray."""
+        return uncertarray(-self.data, self.uncertainty)
+
+    def __abs__(self) -> "uncertarray":
+        """Absolute value of uncertarray."""
+        return uncertarray(np.abs(self.data), self.uncertainty)
 
 
 # TODO: embed docs
