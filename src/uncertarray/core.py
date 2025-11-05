@@ -203,6 +203,13 @@ class uncertarray(t.Generic[T]):
         self.data = np.asanyarray(data)
         self.uncertainty = np.asanyarray(uncertainty)
 
+        if self.data.shape != self.uncertainty.shape:
+            raise ValueError("Data and uncertainty must have the same shape")
+
+        # Ensure uncertainty is non-negative
+        if np.any(self.uncertainty < 0):
+            raise ValueError("Uncertainty must be non-negative")
+
     def __getitem__(self, key: t.Union[int, slice, tuple]) -> "uncertarray[T]":
         """Get item from array."""
         data: T = self.data[key]
@@ -217,7 +224,7 @@ class uncertarray(t.Generic[T]):
         else:
             # Print runtime warning
             self.data[key] = value
-            raise RuntimeWarning(  # noqa: TRY003
+            raise RuntimeWarning(
                 "Array has been set with a non uncertarray value.Uncertainty information may not be correct."
             )
 
@@ -250,6 +257,16 @@ class uncertarray(t.Generic[T]):
     #     self.data = self.data << unit
     #     self.uncertainty = self.uncertainty << unit
     #     return self
+
+    @property
+    def relative_uncertainty(self) -> T:
+        """Return relative uncertainty (uncertainty / |value|)."""
+        return self.uncertainty / np.abs(self.data)
+
+    @property
+    def signal_to_noise(self) -> T:
+        """Return signal-to-noise ratio (|value| / uncertainty)."""
+        return np.abs(self.data) / self.uncertainty
 
     def reshape(self, *args: t.Any, **kwargs: t.Any) -> "uncertarray[T]":
         """Reshape array."""
