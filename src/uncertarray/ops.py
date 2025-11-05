@@ -21,3 +21,11 @@ def less(x: uncertarray, y, **kwargs):
 
     # Conservative: values don't overlap within uncertainties
     return (x_data + x_unc) < (y_data - y_unc)
+
+
+@implements(np.cumsum)
+def ucumsum(x: uncertarray, *args, **kwargs):
+    """Compute cumulative sum of array."""
+    data_cumsum = np.cumsum(x.data, *args, **kwargs)
+    uncertainty_cumsum = np.sqrt(np.cumsum(np.square(x.uncertainty), *args, **kwargs))
+    return uncertarray(data_cumsum, uncertainty_cumsum)

@@ -199,6 +199,13 @@ class uncertarray(t.Generic[T]):
     data: T
     uncertainty: T
 
+    @classmethod
+    def combine(cls, arrays: list["uncertarray[T]"]) -> "uncertarray[T]":
+        """Combine multiple uncertarrays into one by stacking them."""
+        combined_data = np.stack([arr.data for arr in arrays], axis=0)
+        combined_uncertainty = np.stack([arr.uncertainty for arr in arrays], axis=0)
+        return uncertarray(combined_data, combined_uncertainty)
+
     def __init__(self, data: T, uncertainty: T) -> None:
         """Initialize uncertarray."""
         self.data = np.asanyarray(data)
