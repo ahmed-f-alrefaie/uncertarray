@@ -157,16 +157,16 @@ def _apply_binary_op_uncert(
     y: UncertOrGeneric[T],
 ) -> T:
     """Apply error propagation to binary operator."""
-    sig_x = x.uncertainty if isinstance(x, uncertarray) else None
-    sig_y = y.uncertainty if isinstance(y, uncertarray) else None
+    sig_x = x.uncertainty if isinstance(x, uncertarray) else 0 * x
+    sig_y = y.uncertainty if isinstance(y, uncertarray) else 0 * y
 
     x_data = x.data if isinstance(x, uncertarray) else x
     y_data = y.data if isinstance(y, uncertarray) else y
 
     deriv_x, deriv_y = op_x(x_data, y_data), op_y(x_data, y_data)
 
-    std_x = np.square(deriv_x * sig_x) if sig_x is not None else 0.0
-    std_y = np.square(deriv_y * sig_y) if sig_y is not None else 0.0
+    std_x = np.square(deriv_x * sig_x)
+    std_y = np.square(deriv_y * sig_y)
 
     return t.cast(T, np.sqrt(std_x + std_y))
 
