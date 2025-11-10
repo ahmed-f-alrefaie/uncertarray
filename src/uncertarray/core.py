@@ -5,6 +5,8 @@ import typing as t
 import numpy as np
 from scipy.special import psi
 
+from .astropy_support import initialize_astropy_support
+
 T = t.TypeVar("T", bound=np.ndarray)
 Param = t.ParamSpec("Param")
 RetType = t.TypeVar("RetType")
@@ -492,3 +494,4 @@ def _generate_meta_ops() -> None:
 
 _generate_binary_ops()
 _generate_meta_ops()
+initialize_astropy_support()
